@@ -30,7 +30,8 @@ class ReservationConfirmation:
         self.hotel = hotel_object
 
     def generate_confirmation(self):
-        content = f"""Thank you for your reservation.
+        content = f"""
+        Thank you for your reservation.
         Here is your reservation information:
         Name: {self.customer_name}
         Hotel Name: {self.hotel.hotel_name}
@@ -61,19 +62,48 @@ class SecureCreditCard(CreditCard):
             return False
 
 
+class Spa(Hotel):
+    def book_spa_package(self):
+        pass
+
+
+class SpaTicket:
+    def __init__(self, customer_name, hotel_object):
+        self.customer_name = customer_name
+        self.hotel = hotel_object
+    
+    def generate_confirmation(self):
+        content = f""" 
+        Thank you for booking a spa package.
+        Here is your reservation information:
+        Name: {self.customer_name}
+        Hotel Name: {self.hotel.hotel_name}
+        """
+        return content
+
 
 print(df)
 hotel_ID = input("Enter the hotel ID: ")
-hotel = Hotel(hotel_ID)
+hotel = Spa(hotel_ID)
 
-if hotel.available_room():    
+if hotel.available_room():
+    # Validate the credit card details  
     credit_card = SecureCreditCard(number="1234567890123456")
     if credit_card.validate(expiry_date="12/26", holder="JOHN SMITH", cvc="123"):
+        # Authenticate the credit card using the password
         if credit_card.authenticate(given_password="mypass"):
             hotel.book_room()
             name = input("Enter your name: ")
             reservation_ticket = ReservationConfirmation(customer_name=name, hotel_object=hotel)
             print(reservation_ticket.generate_confirmation())
+            # Ask if the user wants to book a spa package
+            spa_reservation = input("Do you want to book a spa package? ")
+            if spa_reservation == "yes":
+                hotel.book_spa_package()
+                spa_ticket = SpaTicket(customer_name=name, hotel_object=hotel)
+                print(spa_ticket.generate_confirmation())
+            else:
+                print("No spa package booked.")
         else:
             print("Authentication failed. Invalid password.")
     else:
