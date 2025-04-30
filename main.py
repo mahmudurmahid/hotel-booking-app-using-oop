@@ -24,6 +24,11 @@ class Hotel:
             return False
 
 
+class Spa(Hotel):
+    def book_spa_package(self):
+        pass
+
+
 class ReservationConfirmation:
     def __init__(self, customer_name, hotel_object):
         self.customer_name = customer_name
@@ -60,11 +65,6 @@ class SecureCreditCard(CreditCard):
             return True
         else:
             return False
-
-
-class Spa(Hotel):
-    def book_spa_package(self):
-        pass
 
 
 class SpaTicket:
